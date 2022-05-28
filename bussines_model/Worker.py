@@ -8,7 +8,8 @@ class Worker:
         self.__id = id
         self.__job = job
 
-    def work(self, job):
-        print("Worker " + self.__name + "_" + self.__id + "started working")
-        print("He is working on " + job)
+    def get_job(self):
+        return self.__job
 
+    def get_name(self):
+        return self.__name

@@ -1,10 +1,13 @@
+from time import sleep
+
+
 class Pipe:
     # we treat pipe like C syscall process communication pipes
     __read = False
     __write = False
     __pipe_data = ""
-
     empty = True
+
 
     def __init__(self):
         print("Initialized")
@@ -52,13 +55,29 @@ class Pipeline:
     pipeline_position = 0
     data = None
 
+    __pipe_status = {"B": "Busy",
+                   "A": "Available",
+                   "PR": "Product ready"}
+    __pipe_state = __pipe_status["A"]  # by default available
     def __init__(self):
         print("Pipeline init")
+
+    def set_pipel_state(self, state):
+        self.__pipe_state = self.__pipe_status[state]
+
 
     def set_pipelist(self):
         self.pipe_list = [initialize_pipe(x) for x in range(len(self.filter_list))]
 
     def write_in_pipe(self):
+        #check if worker is available
+        if self.filter_list[self.pipeline_position].get_state() == "Busy":
+            sleep(5)
+            self.filter_list[self.pipeline_position].set_state("A") #mocking the unavailability
+
+        # make the worker not available anymore
+        self.filter_list[self.pipeline_position].set_state("B")
+
         if self.pipeline_position == 0:
             if self.pipe_list[self.pipeline_position].set_state("O", "W") != -1:  # Open for writing
                 self.pipe_list[self.pipeline_position].write_pipe(
@@ -85,6 +104,3 @@ class Pipeline:
                         return -1
         self.pipeline_position += 1
 
-    def initialize_work(self):
-        for pipe in self.pipe_list:
-            print("x")

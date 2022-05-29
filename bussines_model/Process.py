@@ -17,6 +17,7 @@ class Process:
         self.jobs[initial] = name #update dictionary
 
     def start_assemble(self, pipes):
+        pipes.set_pipel_state("B")
         for pipe_nr in range(len(pipes.filter_list)):
             if pipes.pipeline_position == 0:
                 pipes.write_in_pipe()
@@ -28,6 +29,7 @@ class Process:
             print("working on " + pipes.filter_list[pipes.pipeline_position].actual_pipe)
 
             pipe_nr += 1
+        pipes.set_pipel_state("PR")
 
 
 
